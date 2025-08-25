@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert } from 'react-native';
 import api from '../services/api';
-import useAuthStore from '../state/authStore';
+import useAuthStore from '../state/appStore';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState('');

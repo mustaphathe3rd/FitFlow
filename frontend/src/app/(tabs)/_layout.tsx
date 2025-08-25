@@ -2,21 +2,19 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Button } from 'react-native';
-import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons'; // Import icons
-import useAuthStore from '../../state/authStore';
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import useAppStore from '../../state/appStore';
 
 export default function TabsLayout() {
-  const { logout } = useAuthStore();
+  const { logout } = useAppStore();
 
   const handleLogout = () => {
     logout();
-    // The RootLayout will automatically redirect to the login screen
   };
 
   return (
     <Tabs
       screenOptions={{
-        // A nice blue color for the active tab, and gray for inactive
         tabBarActiveTintColor: '#007BFF', 
         headerRight: () => <Button onPress={handleLogout} title="Log Out" />,
       }}
@@ -35,6 +33,15 @@ export default function TabsLayout() {
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="weight-lifter" size={24} color={color} />,
         }}
       />
+      {/* --- START: NEW PAYWALL SCREEN --- */}
+      <Tabs.Screen
+        name="paywall"
+        options={{
+          title: 'Premium',
+          tabBarIcon: ({ color }) => <FontAwesome5 name="star" size={24} color={color} />,
+        }}
+      />
+      {/* --- END: NEW PAYWALL SCREEN --- */}
       <Tabs.Screen
         name="profile"
         options={{

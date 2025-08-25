@@ -20,4 +20,58 @@ model User {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  workouts Workout[]
+  equipment Equipment[] @relation("UserEquipment")
+}
+
+model Equipment {
+  id          String    @id  @default(cuid())
+  name        String    @unique   // "Bodyweight", "Dumbbell", "Kettlebell"
+
+  // The equipment unlocked by a user
+  users       User[]    @relation("UserEquipment")
+
+  // The exercises that use this equipment
+  exercises  Exercise[]
+}
+
+model Exercise {
+  id            String    @id  @default(cuid())
+  name          String    @unique  // e.g., "Push-up", "Bicep Curl"
+  description   String?  //Make description optional
+
+  equipmentId   String
+  equipment     Equipment @relation(fields: [equipmentId], references: [id])
+
+  // Establishes the many-to-many relationship with Workout
+  workouts      WorkoutExercise[]
+}
+
+model Workout {
+  id        String    @id  @default(cuid())
+  name      String    // e.g., "Morning Bodyweight Blast"
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+
+  // Establishes the many-to-many relationship with Exercise
+  exercises WorkoutExercise[]
+
+  createdAt DateTime   @default(now())
+}
+
+// This is a "join table" that connects Workouts and exercises
+// and stores extra informstion like sets and reps.
+model WorkoutExercise {
+  workoutId     String
+  workout       Workout @relation(fields: [workoutId], references: [id])
+  exerciseId    String
+  exercise      Exercise @relation(fields: [exerciseId], references: [id])
+
+  sets          Int  
+  reps          Int
+  order         Int
+
+  @@id([workoutId, exerciseId,order]) // Composite primary key
 }
